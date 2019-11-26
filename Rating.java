@@ -1,162 +1,210 @@
 package Game;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+public class Rating {
 
-public class UserInterface extends JPanel implements MouseListener, MouseMotionListener {
-	
-	static int mouseX, mouseY, newMouseX, newMouseY;
-	
-	static int squareSize = 32;
-	
-	@Override
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		this.setBackground(Color.WHITE);
-		this.addMouseListener(this);
-        this.addMouseMotionListener(this);
-        for(int i = 0; i < 64; i+=2) {
-        	g.setColor(new Color(255, 200, 100));
-        	g.fillRect(((i % 8 + ((i / 8) % 2)) * squareSize), ((i / 8) * squareSize),
-        				squareSize, squareSize);
-        	g.setColor(new Color(150, 50, 30));
-        	g.fillRect(((((i + 1) % 8) - (((i + 1) / 8) % 2)) * squareSize), (((i + 1) / 8) * squareSize),
-    				squareSize, squareSize);
-        }
-        Image chessPiecesImage;
-		chessPiecesImage = new ImageIcon("ChessPieces.png").getImage();
-        for(int i = 0; i < 64; i++) {
-        	int j = -1, k = -1;
-        	switch (MainChessClass.chessBoard[i/8][i%8]) {
-	        	case "P":
-					j = 5; k = 0;
-					break;
-	        	case "p":
-					j = 5; k = 1;
-					break;
-				case "R":
-					j = 2; k = 0;
-					break;
-				case "r":
-					j = 2; k = 1;
-					break;
-				case "K":
-					j = 4; k = 0;
-					break;
-				case "k":
-					j = 4; k = 1;
-					break;
-				case "B":
-					j = 3; k = 0;
-					break;
-				case "b":
-					j = 3; k = 1;
-					break;
-				case "Q":
-					j = 1; k = 0;
-					break;
-				case "q":
-					j = 1; k = 1;
-					break;
-				case "A":
-					j = 0; k = 0;
-					break;
-				case "a":
-					j = 0; k = 1;
-					break;
-        	}
-        	if(j != -1 && k != -1) {
-                g.drawImage(chessPiecesImage, (i%8)*squareSize, (i/8)*squareSize, 
-                			(i%8+1)*squareSize, (i/8+1)*squareSize, j*64, k*64, 
-                			(j+1)*64, (k+1)*64, this);
-        	}
-        }
-		/*g.setColor(Color.BLUE);
-		g.fillRect(x - 20, y - 20, 40, 40);
-		g.setColor(new Color(190, 81, 215));
-		g.fillRect(40, 20, 80, 50);
-		g.drawString("Example Text", x, y);
-		Image chessPiecesImage;
-		chessPiecesImage = new ImageIcon("ChessPieces.png").getImage();
-        g.drawImage(chessPiecesImage, x, 0, x+100, 100, x, 0, x+100, 100, this);*/
+	static int pawnBoard[][]={
+			{ 0,  0,  0,  0,  0,  0,  0,  0},
+			{50, 50, 50, 50, 50, 50, 50, 50},
+			{10, 10, 20, 30, 30, 20, 10, 10},
+			{ 5,  5, 10, 25, 25, 10,  5,  5},
+			{ 0,  0,  0, 20, 20,  0,  0,  0},
+			{ 5, -5,-10,  0,  0,-10, -5,  5},
+			{ 5, 10, 10,-20,-20, 10, 10,  5},
+			{ 0,  0,  0,  0,  0,  0,  0,  0}};
+	static int rookBoard[][]={
+			{ 0,  0,  0,  0,  0,  0,  0,  0},
+			{ 5, 10, 10, 10, 10, 10, 10,  5},
+			{-5,  0,  0,  0,  0,  0,  0, -5},
+			{-5,  0,  0,  0,  0,  0,  0, -5},
+			{-5,  0,  0,  0,  0,  0,  0, -5},
+			{-5,  0,  0,  0,  0,  0,  0, -5},
+			{-5,  0,  0,  0,  0,  0,  0, -5},
+			{ 0,  0,  0,  5,  5,  0,  0,  0}};
+	static int knightBoard[][]={
+			{-50,-40,-30,-30,-30,-30,-40,-50},
+			{-40,-20,  0,  0,  0,  0,-20,-40},
+			{-30,  0, 10, 15, 15, 10,  0,-30},
+			{-30,  5, 15, 20, 20, 15,  5,-30},
+			{-30,  0, 15, 20, 20, 15,  0,-30},
+			{-30,  5, 10, 15, 15, 10,  5,-30},
+			{-40,-20,  0,  5,  5,  0,-20,-40},
+			{-50,-40,-30,-30,-30,-30,-40,-50}};
+	static int bishopBoard[][]={
+			{-20,-10,-10,-10,-10,-10,-10,-20},
+			{-10,  0,  0,  0,  0,  0,  0,-10},
+			{-10,  0,  5, 10, 10,  5,  0,-10},
+			{-10,  5,  5, 10, 10,  5,  5,-10},
+			{-10,  0, 10, 10, 10, 10,  0,-10},
+			{-10, 10, 10, 10, 10, 10, 10,-10},
+			{-10,  5,  0,  0,  0,  0,  5,-10},
+			{-20,-10,-10,-10,-10,-10,-10,-20}};
+	static int queenBoard[][]={
+			{-20,-10,-10, -5, -5,-10,-10,-20},
+			{-10,  0,  0,  0,  0,  0,  0,-10},
+			{-10,  0,  5,  5,  5,  5,  0,-10},
+			{ -5,  0,  5,  5,  5,  5,  0, -5},
+			{  0,  0,  5,  5,  5,  5,  0, -5},
+			{-10,  5,  5,  5,  5,  5,  0,-10},
+			{-10,  0,  5,  0,  0,  0,  0,-10},
+			{-20,-10,-10, -5, -5,-10,-10,-20}};
+	static int kingMidBoard[][]={
+			{-30,-40,-40,-50,-50,-40,-40,-30},
+			{-30,-40,-40,-50,-50,-40,-40,-30},
+			{-30,-40,-40,-50,-50,-40,-40,-30},
+			{-30,-40,-40,-50,-50,-40,-40,-30},
+			{-20,-30,-30,-40,-40,-30,-30,-20},
+			{-10,-20,-20,-20,-20,-20,-20,-10},
+			{ 20, 20,  0,  0,  0,  0, 20, 20},
+			{ 20, 30, 10,  0,  0, 10, 30, 20}};
+	static int kingEndBoard[][]={
+			{-50,-40,-30,-20,-20,-30,-40,-50},
+			{-30,-20,-10,  0,  0,-10,-20,-30},
+			{-30,-10, 20, 30, 30, 20,-10,-30},
+			{-30,-10, 30, 40, 40, 30,-10,-30},
+			{-30,-10, 30, 40, 40, 30,-10,-30},
+			{-30,-10, 20, 30, 30, 20,-10,-30},
+			{-30,-30,  0,  0,  0,  0,-30,-30},
+			{-50,-30,-30,-30,-30,-30,-30,-50}};
+
+	public static int rating(int list, int depth) {
+		int counter=0, material=rateMaterial();
+		counter+=rateAttack();
+		counter+=material;
+		counter+=rateMoveability(list, depth, material);
+		counter+=ratePositional(material);
+		MainChessClass.flipBoard();
+		material=rateMaterial();
+		counter-=rateAttack();
+		counter-=material;
+		counter-=rateMoveability(list, depth, material);
+		counter-=ratePositional(material);
+		MainChessClass.flipBoard();
+		return -(counter+depth*50);
 	}
 	
-	@Override
-	public void mouseMoved(MouseEvent e) {}
-	
-	@Override
-	public void mousePressed(MouseEvent e) {
-		if(e.getX() < (8*squareSize) && e.getY() < (8*squareSize)) {
-			//if inside the board
-			mouseX = e.getX();
-			mouseY = e.getY();
-			repaint();
-		}
-	}
-	
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		if(e.getX() < (8*squareSize) && e.getY() < (8*squareSize)) {
-			//if inside the board
-			newMouseX = e.getX();
-			newMouseY = e.getY();
-			if(e.getButton() == MouseEvent.BUTTON1) {
-				String dragMove;
-				if((newMouseY/squareSize == 0) && (mouseY/squareSize == 1) && 
-							"P".equals(MainChessClass.chessBoard[mouseY/squareSize][mouseX/squareSize])) {
-					//Pawn Promotion
-					dragMove = "" + (mouseX/squareSize) + (newMouseX/squareSize) + 
-							MainChessClass.chessBoard[newMouseY/squareSize][newMouseX/squareSize] +
-							"QP";
-				}else {
-					//regular move
-					dragMove = "" + (mouseY/squareSize) + (mouseX/squareSize) + 
-							(newMouseY/squareSize) + (newMouseX/squareSize) + 
-							MainChessClass.chessBoard[newMouseY/squareSize][newMouseX/squareSize];
+	public static int rateAttack() {
+		int counter = 0, tempPositionC = MainChessClass.kingPositionC;
+		for(int i = 0; i < 64; i++) {
+			switch(MainChessClass.chessBoard[i/8][i%8]) {
+			case "P":{
+					MainChessClass.kingPositionC = i;
+					if(!(MainChessClass.kingSafe())) {
+						counter -= 64;
+					}
 				}
-				String userPosibilities = MainChessClass.posibleMoves();
-				if(userPosibilities.replace(dragMove, "").length() < userPosibilities.length()) {
-					//if valid move
-					MainChessClass.makeMove(dragMove);
-					MainChessClass.flipBoard();
-					MainChessClass.makeMove(
-							MainChessClass.alphaBetaPruning(MainChessClass.globalDepth, 1000000, -1000000, "", 0)
-							);
-					MainChessClass.flipBoard();
-					repaint();
+				break;
+			case "R":{
+					MainChessClass.kingPositionC = i;
+					if(!(MainChessClass.kingSafe())) {
+						counter -= 500;
+					}
 				}
+				break;
+			case "K":{
+					MainChessClass.kingPositionC = i;
+					if(!(MainChessClass.kingSafe())) {
+						counter -= 300;
+					}
+				}
+				break;
+			case "B":{
+					MainChessClass.kingPositionC = i;
+					if(!(MainChessClass.kingSafe())) {
+						counter -= 300;
+					}
+				}
+				break;
+			case "Q":{
+					MainChessClass.kingPositionC = i;
+					if(!(MainChessClass.kingSafe())) {
+						counter -= 900;
+					}
+				}
+				break;
 			}
 		}
+		MainChessClass.kingPositionC = tempPositionC;
+		if(!(MainChessClass.kingSafe())) {
+			counter -= 200;
+		}
+		return (counter / 2);
 	}
 	
-	@Override
-	public void mouseClicked(MouseEvent e) {}
-	
-	@Override
-	public void mouseDragged(MouseEvent e) {}
-	
-	@Override
-	public void mouseEntered(MouseEvent e) {}
-	
-	@Override
-	public void mouseExited(MouseEvent e) {}
+	public static int rateMaterial() {
+		int counter = 0, bishopCounter = 0;
+		for(int i = 0; i < 64; i++) {
+			switch(MainChessClass.chessBoard[i/8][i%8]) {
+			case "P":
+				counter += 100;
+				break;
+			case "R":
+				counter += 500;
+				break;
+			case "K":
+				counter += 300;
+				break;
+			case "B":
+				bishopCounter += 1;
+				break;
+			case "Q":
+				counter += 900;
+				break;
+			}
+		}
+		if(bishopCounter >= 2) {
+			counter += (300*bishopCounter);
+		}else {
+			if(bishopCounter == 1) {
+				counter += 250;
+			}
+		}
+		return counter;
+	}
 
+	public static int rateMoveability(int listLength, int depth, int material) {
+		int counter = 0;
+		counter += listLength;//5 points for valid move
+		if(listLength == 0) {//current side is in checkmate or a stalemate
+			if(!(MainChessClass.kingSafe())) {//if checkmate
+				counter += (-200000*depth);
+			}else {//if stalemate
+				counter += (-150000*depth);
+			}
+		}
+		return counter;
+	}
+	
+	public static int ratePositional(int material) {
+		int counter=0;
+		for (int i=0;i<64;i++) {
+			switch (MainChessClass.chessBoard[i/8][i%8]) {
+			case "P": 
+				counter+=pawnBoard[i/8][i%8];
+				break;
+			case "R": 
+				counter+=rookBoard[i/8][i%8];
+				break;
+			case "K": 
+				counter+=knightBoard[i/8][i%8];
+				break;
+			case "B": 
+				counter+=bishopBoard[i/8][i%8];
+				break;
+			case "Q": 
+				counter+=queenBoard[i/8][i%8];
+				break;
+			case "A": 
+				if (material>=1750) {
+					counter+=kingMidBoard[i/8][i%8];
+					counter+=MainChessClass.posibleA(MainChessClass.kingPositionC).length()*10;
+				}else {
+					counter+=kingEndBoard[i/8][i%8]; 
+					counter+=MainChessClass.posibleA(MainChessClass.kingPositionC).length()*30;
+				}
+				break;
+			}
+		}
+		return counter;
+	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
